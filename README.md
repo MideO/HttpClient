@@ -1,0 +1,2 @@
+# HttpClient
+Lightweight scala HttpClient
