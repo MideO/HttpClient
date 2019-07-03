@@ -5,7 +5,7 @@ case class EntityFoo(message: String, value: String)
 
 class HttpResponseTest extends HttpIOTest {
 
-  it should "Should be creatable" in {
+  it should "be creatable" in {
     val response: HttpResponse[EntityFoo] = HttpResponse(
       200,
       Map("location" -> "http://foo.abr"),

@@ -1,12 +1,19 @@
 package com.github.mideo.httpClient
 
+import java.net.ConnectException
+
 import com.github.mideo.httpClient.Implicits._
 import com.github.tomakehurst.wiremock.client.WireMock._
 
+import scala.concurrent.Await.result
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
 import scala.language.higherKinds
 
 
 class HttpRequestFunctionalTest extends HttpIOTest {
+
 
   override def beforeAll() = mockServer.start()
 
@@ -14,9 +21,25 @@ class HttpRequestFunctionalTest extends HttpIOTest {
   override def afterAll() = mockServer.stop()
 
 
+  it should "send request post Future" in {
+    implicit def bind[T]: T => Future[T] = t => Future(t)
+
+    val request = HttpRequest(
+      Post,
+      "http://localhost:8080/lalal",
+      Map("Accept" -> "application/json"),
+      Payload("abc"))
+    val future: Future[Either[Throwable, HttpResponse[Response]]] = request.send
+    val eitherResponse: Either[Throwable, HttpResponse[Response]] = result(future, 5 seconds)
+
+
+    eitherResponse.isRight should be(true)
+    eitherResponse.right.get.StatusCode should equal(404)
+    eitherResponse.right.get.Entity should equal("No response could be served as there are no stub mappings in this WireMock instance.")
+
+  }
+
   it should "send post request successfully" in {
-
-
     val request = HttpRequest(
       Post,
       "http://localhost:8080",
