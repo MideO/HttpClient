@@ -28,7 +28,6 @@ case class HttpRequest[T: Manifest](Method: HttpMethod,
 
   def send[F[_], B: Manifest](implicit bind: EitherResponse[B] => F[EitherResponse[B]]): F[Either[Throwable, HttpResponse[B]]] = {
     implicit val connection: HttpURLConnection = URL.openConnection().asInstanceOf[HttpURLConnection]
-
     connection.setDoOutput(true)
     connection.setRequestMethod(Method)
 

@@ -22,8 +22,6 @@ class HttpRequestErrorFunctionalTest extends HttpIOTest {
     val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = request.send
 
     optionResponse.get.left.get.isInstanceOf[ConnectException] should be(true)
-
-
   }
 
 }

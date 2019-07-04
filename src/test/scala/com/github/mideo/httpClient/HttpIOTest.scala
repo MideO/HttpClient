@@ -10,6 +10,5 @@ trait HttpIOTest
     with BeforeAndAfterAll
     with MockitoSugar
     with Matchers {
-
   protected val mockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8080))
 }

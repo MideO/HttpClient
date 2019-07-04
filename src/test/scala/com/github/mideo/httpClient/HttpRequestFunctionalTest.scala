@@ -1,7 +1,5 @@
 package com.github.mideo.httpClient
 
-import java.net.ConnectException
-
 import com.github.mideo.httpClient.Implicits._
 import com.github.tomakehurst.wiremock.client.WireMock._
 
