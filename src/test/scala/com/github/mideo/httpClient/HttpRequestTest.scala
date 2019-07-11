@@ -92,7 +92,7 @@ class HttpRequestTest extends HttpIOTest {
     request.Entity.get should equal("""{"value":"bar"}""".getBytes)
   }
 
-  it should "create json xml request" in {
+  it should "create xml request" in {
     val request: XmlHttpRequest[BarEntity] = XmlHttpRequest(
       Put,
       "http://foo.bar/bar",
@@ -107,7 +107,7 @@ class HttpRequestTest extends HttpIOTest {
     ))
     request.Options should equal(TimeOutOption())
     request.URL should equal(new URL("http://foo.bar/bar"))
-    Source.fromBytes(request.Entity.get.toArray).mkString should equal("<xml><BarEntity><value>bar</value></BarEntity><xml>")
+    Source.fromBytes(request.Entity.get.toArray).mkString should equal("<BarEntity><value>bar</value></BarEntity>")
   }
 
 }
