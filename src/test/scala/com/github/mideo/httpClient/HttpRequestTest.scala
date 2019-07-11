@@ -4,6 +4,7 @@ import java.net.URL
 
 import com.github.mideo.httpClient.Implicits._
 
+import scala.io.Source
 import scala.language.higherKinds
 
 
@@ -46,12 +47,12 @@ class HttpRequestTest extends HttpIOTest {
     val request: HttpRequest[BarEntity] = HttpRequest(
       Put,
       "http://foo.bar/bar",
-      Map("Accecpt" -> "application/json"),
+      Map("Accept" -> "application/json"),
       Some(BarEntity("bar"))
     )
 
     request.Method should equal(Put)
-    request.Headers should equal(Map("Accecpt" -> "application/json"))
+    request.Headers should equal(Map("Accept" -> "application/json"))
     request.Options should equal(TimeOutOption())
     request.URL should equal(new URL("http://foo.bar/bar"))
     request.Entity.get should equal("""{"value":"bar"}""".getBytes)
@@ -62,15 +63,51 @@ class HttpRequestTest extends HttpIOTest {
     val request: HttpRequest[BarEntity] = HttpRequest(
       Put,
       "http://foo.bar/bar",
-      Map("Accecpt" -> "application/json"),
+      Map("Accept" -> "application/json"),
       BarEntity("bar")
     )
 
     request.Method should equal(Put)
-    request.Headers should equal(Map("Accecpt" -> "application/json"))
+    request.Headers should equal(Map("Accept" -> "application/json"))
     request.Options should equal(TimeOutOption())
     request.URL should equal(new URL("http://foo.bar/bar"))
     request.Entity.get should equal("""{"value":"bar"}""".getBytes)
+  }
+
+  it should "create json http request" in {
+    val request: JsonHttpRequest[BarEntity] = JsonHttpRequest(
+      Put,
+      "http://foo.bar/bar",
+      Map("Accept" -> "application/json"),
+      BarEntity("bar")
+    )
+
+    request.Method should equal(Put)
+    request.Headers should equal(Map(
+      "Accept" -> "application/json",
+      "Content-Type" -> "application/json",
+    ))
+    request.Options should equal(TimeOutOption())
+    request.URL should equal(new URL("http://foo.bar/bar"))
+    request.Entity.get should equal("""{"value":"bar"}""".getBytes)
+  }
+
+  it should "create json xml request" in {
+    val request: XmlHttpRequest[BarEntity] = XmlHttpRequest(
+      Put,
+      "http://foo.bar/bar",
+      Map("Accept" -> "application/xml"),
+      BarEntity("bar")
+    )
+
+    request.Method should equal(Put)
+    request.Headers should equal(Map(
+      "Accept" -> "application/xml",
+      "Content-Type" -> "application/xml",
+    ))
+    request.Options should equal(TimeOutOption())
+    request.URL should equal(new URL("http://foo.bar/bar"))
+    Source.fromBytes(request.Entity.get.toArray).mkString should equal("<xml><BarEntity><value>bar</value></BarEntity><xml>")
   }
 
 }

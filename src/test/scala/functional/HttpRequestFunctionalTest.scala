@@ -1,6 +1,7 @@
-package com.github.mideo.httpClient
+package functional
 
 import com.github.mideo.httpClient.Implicits._
+import com.github.mideo.httpClient.{HttpIOTest, HttpRequest, HttpResponse, JsonHttpRequest, Payload, Post, Put, Response, XmlHttpRequest}
 import com.github.tomakehurst.wiremock.client.WireMock._
 
 import scala.concurrent.Await.result
@@ -13,10 +14,10 @@ import scala.language.higherKinds
 class HttpRequestFunctionalTest extends HttpIOTest {
 
 
-  override def beforeAll() = mockServer.start()
+  override def beforeAll(): Unit = mockServer.start()
 
 
-  override def afterAll() = mockServer.stop()
+  override def afterAll(): Unit = mockServer.stop()
 
 
   it should "send request post Future" in {
@@ -25,7 +26,7 @@ class HttpRequestFunctionalTest extends HttpIOTest {
     val request = HttpRequest(
       Post,
       "http://localhost:8080/lalal",
-      Map("Accept" -> "application/json"),
+      Map("Accept" -> "application/xml"),
       Payload("abc"))
     val future: Future[Either[Throwable, HttpResponse[Response]]] = request.send
     val eitherResponse: Either[Throwable, HttpResponse[Response]] = result(future, 5 seconds)
@@ -38,7 +39,7 @@ class HttpRequestFunctionalTest extends HttpIOTest {
   }
 
   it should "send post request successfully" in {
-    val request = HttpRequest(
+    val request = JsonHttpRequest(
       Post,
       "http://localhost:8080",
       Map("Accept" -> "application/json"),
@@ -65,6 +66,29 @@ class HttpRequestFunctionalTest extends HttpIOTest {
       Put,
       "http://localhost:8080/foo",
       Map("Accept" -> "application/json"),
+      Payload("abc"))
+
+    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = request.send
+    optionResponse.get.isRight should be(true)
+    optionResponse.get.right.get.StatusCode should equal(200)
+    optionResponse.get.right.get.Entity should equal(Response("response"))
+
+  }
+
+  it should "send post request successfully and deserialize xml response" in {
+    mockServer.addStubMapping {
+      stubFor {
+        put(urlEqualTo("/foo"))
+          .willReturn(aResponse()
+            .withHeader("Content-Type", "application/xml")
+            .withBody("<xml><value>response</value></xml>"))
+      }
+    }
+
+    val request = XmlHttpRequest(
+      Put,
+      "http://localhost:8080/foo",
+      Map("Accept" -> "application/xml"),
       Payload("abc"))
 
     val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = request.send
