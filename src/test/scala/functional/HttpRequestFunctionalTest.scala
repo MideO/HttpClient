@@ -1,7 +1,7 @@
 package functional
 
 import com.github.mideo.httpClient.Implicits._
-import com.github.mideo.httpClient.{HttpIOTest, HttpRequest, HttpResponse, JsonHttpRequest, Payload, Post, Put, Response, XmlHttpRequest}
+import com.github.mideo.httpClient._
 import com.github.tomakehurst.wiremock.client.WireMock._
 
 import scala.concurrent.Await.result
@@ -95,6 +95,30 @@ class HttpRequestFunctionalTest extends HttpIOTest {
     optionResponse.get.isRight should be(true)
     optionResponse.get.right.get.StatusCode should equal(200)
     optionResponse.get.right.get.Entity should equal(Response("response"))
+
+  }
+
+  it should "send retry http request" in {
+    mockServer.addStubMapping {
+      stubFor {
+        get(urlEqualTo("/slow-endpoint"))
+          .willReturn(aResponse()
+            .withFixedDelay(1000)
+            .withHeader("Content-Type", "application/xml")
+            .withBody("<xml><value>response</value></xml>"))
+      }
+    }
+
+    val request = XmlHttpRequest(
+      Get,
+      "http://localhost:8080/slow-endpoint",
+      Map("Accept" -> "application/xml"),
+      timeOutOptions = TimeOutOption(50, 100),
+      retryOptions = RetryOptions(2))
+
+    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = request.send
+    optionResponse.get.isLeft should be(true)
+    mockServer.verify(3, getRequestedFor(urlEqualTo("/slow-endpoint")))
 
   }
 

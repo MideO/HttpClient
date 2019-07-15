@@ -22,7 +22,7 @@ class HttpRequestTest extends HttpIOTest {
 
     request.Method should equal(Post)
     request.Headers should equal(Map.empty)
-    request.Options should equal(TimeOutOption(2000, 50000))
+    request.timeOutOptions should equal(TimeOutOption(2000, 50000))
     request.URL should equal(new URL("http://foo.bar/bar"))
     request.Entity should equal(None)
   }
@@ -37,7 +37,7 @@ class HttpRequestTest extends HttpIOTest {
 
     request.Method should equal(Get)
     request.Headers should equal(Map.empty)
-    request.Options should equal(TimeOutOption())
+    request.timeOutOptions should equal(TimeOutOption())
     request.URL should equal(new URL("http://foo.bar/bar"))
     request.Entity should equal(None)
   }
@@ -53,7 +53,7 @@ class HttpRequestTest extends HttpIOTest {
 
     request.Method should equal(Put)
     request.Headers should equal(Map("Accept" -> "application/json"))
-    request.Options should equal(TimeOutOption())
+    request.timeOutOptions should equal(TimeOutOption())
     request.URL should equal(new URL("http://foo.bar/bar"))
     request.Entity.get should equal("""{"value":"bar"}""".getBytes)
   }
@@ -69,7 +69,7 @@ class HttpRequestTest extends HttpIOTest {
 
     request.Method should equal(Put)
     request.Headers should equal(Map("Accept" -> "application/json"))
-    request.Options should equal(TimeOutOption())
+    request.timeOutOptions should equal(TimeOutOption())
     request.URL should equal(new URL("http://foo.bar/bar"))
     request.Entity.get should equal("""{"value":"bar"}""".getBytes)
   }
@@ -87,7 +87,7 @@ class HttpRequestTest extends HttpIOTest {
       "Accept" -> "application/json",
       "Content-Type" -> "application/json",
     ))
-    request.Options should equal(TimeOutOption())
+    request.timeOutOptions should equal(TimeOutOption())
     request.URL should equal(new URL("http://foo.bar/bar"))
     request.Entity.get should equal("""{"value":"bar"}""".getBytes)
   }
@@ -105,7 +105,7 @@ class HttpRequestTest extends HttpIOTest {
       "Accept" -> "application/xml",
       "Content-Type" -> "application/xml",
     ))
-    request.Options should equal(TimeOutOption())
+    request.timeOutOptions should equal(TimeOutOption())
     request.URL should equal(new URL("http://foo.bar/bar"))
     Source.fromBytes(request.Entity.get.toArray).mkString should equal("<BarEntity><value>bar</value></BarEntity>")
   }

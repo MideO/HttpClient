@@ -11,6 +11,7 @@ case class HttpResponse[T: Manifest](StatusCode: Int,
   val Entity: T = Try {
     Mapper.readValue[T](raw.toArray, manifest.runtimeClass.asInstanceOf[Class[T]])
   }.toOption.getOrElse {
+    // Last resort! dump as String
     Source.fromBytes(raw.toArray).mkString.asInstanceOf[T]
   }
 
