@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 
 case class EntityFoo(message: String, value: String)
 
-class HttpResponseTest extends HttpIOTest {
+class HttpResponseTest extends HttpClientTest {
 
   it should "be creatable from json" in {
     implicit val Mapper: ObjectMapper = Mappers.JsonMapper

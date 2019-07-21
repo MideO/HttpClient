@@ -10,7 +10,7 @@ import scala.language.higherKinds
 
 case class BarEntity(value: String)
 
-class HttpRequestTest extends HttpIOTest {
+class HttpRequestTest extends HttpClientTest {
   it should "create http request" in {
     val request: HttpRequest[BarEntity] = HttpRequest(
       Post,

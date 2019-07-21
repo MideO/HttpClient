@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 import scala.language.higherKinds
 
 
-class HttpRequestFunctionalTest extends HttpIOTest {
+class HttpRequestFunctionalTest extends HttpClientTest {
 
 
   override def beforeAll(): Unit = mockServer.start()
@@ -21,7 +21,7 @@ class HttpRequestFunctionalTest extends HttpIOTest {
 
 
   it should "send request post Future" in {
-    implicit def bind[T]: T => Future[T] = t => Future(t)
+    implicit def unit[T]: T => Future[T] = t => Future(t)
 
     val request = HttpRequest(
       Post,

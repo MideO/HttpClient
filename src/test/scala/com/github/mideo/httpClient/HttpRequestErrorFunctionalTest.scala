@@ -10,7 +10,7 @@ case class Payload(value: String)
 
 case class Response(value: String)
 
-class HttpRequestErrorFunctionalTest extends HttpIOTest {
+class HttpRequestErrorFunctionalTest extends HttpClientTest {
 
   it should "send post request with Option Monad" in {
     val request = HttpRequest(

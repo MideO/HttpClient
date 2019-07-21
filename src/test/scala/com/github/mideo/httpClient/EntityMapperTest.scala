@@ -3,7 +3,7 @@ package com.github.mideo.httpClient
 
 case class TestEntity(value: String = "Test")
 
-class ObjectMapperTest extends HttpIOTest {
+class ObjectMapperTest extends HttpClientTest {
 
   it should "serialise entity" in {
     Mappers.JsonMapper.writeValueAsString(TestEntity()) should equal("""{"value":"Test"}""")
