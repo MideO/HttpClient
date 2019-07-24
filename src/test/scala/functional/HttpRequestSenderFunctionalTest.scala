@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 import scala.language.higherKinds
 
 
-class HttpRequestFunctionalTest extends HttpClientTest {
+class HttpRequestSenderFunctionalTest extends HttpClientTest {
 
 
   override def beforeAll(): Unit = mockServer.start()
@@ -28,7 +28,7 @@ class HttpRequestFunctionalTest extends HttpClientTest {
       "http://localhost:8080/lalal",
       Map("Accept" -> "application/xml"),
       Payload("abc"))
-    val future: Future[Either[Throwable, HttpResponse[Response]]] = request.send
+    val future: Future[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
     val eitherResponse: Either[Throwable, HttpResponse[Response]] = result(future, 5 seconds)
 
 
@@ -38,6 +38,7 @@ class HttpRequestFunctionalTest extends HttpClientTest {
 
   }
 
+
   it should "send post request successfully" in {
     val request = JsonHttpRequest(
       Post,
@@ -45,7 +46,7 @@ class HttpRequestFunctionalTest extends HttpClientTest {
       Map("Accept" -> "application/json"),
       Payload("abc"))
 
-    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = request.send
+    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
     optionResponse.get.isRight should be(true)
     optionResponse.get.right.get.StatusCode should equal(404)
     optionResponse.get.right.get.Entity should equal("No response could be served as there are no stub mappings in this WireMock instance.")
@@ -68,7 +69,7 @@ class HttpRequestFunctionalTest extends HttpClientTest {
       Map("Accept" -> "application/json"),
       Payload("abc"))
 
-    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = request.send
+    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
     optionResponse.get.isRight should be(true)
     optionResponse.get.right.get.StatusCode should equal(200)
     optionResponse.get.right.get.Entity should equal(Response("response"))
@@ -91,7 +92,7 @@ class HttpRequestFunctionalTest extends HttpClientTest {
       Map("Accept" -> "application/xml"),
       Payload("abc"))
 
-    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = request.send
+    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
     optionResponse.get.isRight should be(true)
     optionResponse.get.right.get.StatusCode should equal(200)
     optionResponse.get.right.get.Entity should equal(Response("response"))
@@ -116,7 +117,7 @@ class HttpRequestFunctionalTest extends HttpClientTest {
       timeOutOptions = TimeOutOption(50, 100),
       retryOptions = RetryOptions(2))
 
-    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = request.send
+    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
     optionResponse.get.isLeft should be(true)
     mockServer.verify(3, getRequestedFor(urlEqualTo("/slow-endpoint")))
 

@@ -19,7 +19,7 @@ class HttpRequestErrorFunctionalTest extends HttpClientTest {
       Map("Accept" -> "application/json"),
       Payload("abc"))
 
-    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = request.send
+    val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
 
     optionResponse.get.left.get.isInstanceOf[ConnectException] should be(true)
   }

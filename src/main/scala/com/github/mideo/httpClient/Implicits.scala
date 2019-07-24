@@ -14,16 +14,5 @@ object Implicits {
     .replace("$", "")
     .toUpperCase
 
-
-  implicit class RetryableTask[K](f: () => Try[K]) {
-    @tailrec final def retry(times: Int): Try[K] = {
-      if (times == 0) return f()
-      f() match {
-        case result if result.isSuccess => result
-        case _ => retry(times - 1)
-      }
-
-    }
-  }
 }
 

@@ -3,23 +3,43 @@ package com.github.mideo.httpClient
 import java.net.HttpURLConnection
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.mideo.httpClient.Implicits._
 
+import scala.annotation.tailrec
+import scala.collection.JavaConverters._
 import scala.io.Source
+import scala.language.higherKinds
 import scala.reflect.ClassTag
-import scala.util.Try
-import collection.JavaConverters._
-import Implicits._
+import scala.util.{Success, Try}
+
+
+object RetryableTask {
+  @tailrec final def retry[A, B](times: Int, function: A => Try[B], args: A): Try[B] = {
+    if (times == 0) return function.apply(args)
+    function.apply(args) match {
+      case Success(s) => Success(s)
+      case _ => retry(times - 1, function, args)
+    }
+  }
+}
 
 object HttpRequestSender {
-  def send[T, K: ClassTag](request: HttpRequest[T])
-                          (implicit Mapper: ObjectMapper): Try[HttpResponse[K]] = Try {
+  private type E[B] = Either[Throwable, HttpResponse[B]]
 
+  def send[F[_], T, B: ClassTag](request: AbstractHttpRequest[T])
+                                (implicit unit: E[B] => F[E[B]]): F[Either[Throwable, HttpResponse[B]]] = {
+    implicit val objectMapper: ObjectMapper = request.objectMapper
+    unit(RetryableTask.retry(request.RetryOptions.times, doSend[T, B], request).toEither)
+  }
+
+
+  def doSend[T, K: ClassTag](request: AbstractHttpRequest[T])(implicit objectMapper: ObjectMapper): Try[HttpResponse[K]] = Try {
     implicit val connection: HttpURLConnection = request.URL.openConnection().asInstanceOf[HttpURLConnection]
     connection.setDoOutput(true)
     connection.setRequestMethod(request.Method)
-    connection.setConnectTimeout(request.timeOutOptions.ConnectTimeoutMillis)
-    connection.setReadTimeout(request.timeOutOptions.ReadTimeoutMillis)
-    for {(key: String, value: Object) <- request.Headers} yield connection.setRequestProperty(key, String.valueOf(value))
+    connection.setConnectTimeout(request.TimeOutOptions.ConnectTimeoutMillis)
+    connection.setReadTimeout(request.TimeOutOptions.ReadTimeoutMillis)
+    for {(key: String, value: Object) <- request.contentType(request.Headers)} yield connection.setRequestProperty(key, String.valueOf(value))
 
     for {body: Seq[Byte] <- request.Entity} yield {
       connection.getOutputStream.write(body.toArray)

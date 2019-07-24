@@ -20,7 +20,7 @@ class HttpRequestTest extends HttpClientTest {
       TimeOutOption(2000, 50000)
     )
 
-    request.Method should equal(Post)
+    request.method should equal(Post)
     request.Headers should equal(Map.empty)
     request.timeOutOptions should equal(TimeOutOption(2000, 50000))
     request.URL should equal(new URL("http://foo.bar/bar"))
@@ -35,7 +35,7 @@ class HttpRequestTest extends HttpClientTest {
       None
     )
 
-    request.Method should equal(Get)
+    request.method should equal(Get)
     request.Headers should equal(Map.empty)
     request.timeOutOptions should equal(TimeOutOption())
     request.URL should equal(new URL("http://foo.bar/bar"))
@@ -51,7 +51,7 @@ class HttpRequestTest extends HttpClientTest {
       Some(BarEntity("bar"))
     )
 
-    request.Method should equal(Put)
+    request.method should equal(Put)
     request.Headers should equal(Map("Accept" -> "application/json"))
     request.timeOutOptions should equal(TimeOutOption())
     request.URL should equal(new URL("http://foo.bar/bar"))
@@ -67,7 +67,7 @@ class HttpRequestTest extends HttpClientTest {
       BarEntity("bar")
     )
 
-    request.Method should equal(Put)
+    request.method should equal(Put)
     request.Headers should equal(Map("Accept" -> "application/json"))
     request.timeOutOptions should equal(TimeOutOption())
     request.URL should equal(new URL("http://foo.bar/bar"))
@@ -82,7 +82,7 @@ class HttpRequestTest extends HttpClientTest {
       BarEntity("bar")
     )
 
-    request.Method should equal(Put)
+    request.method should equal(Put)
     request.Headers should equal(Map(
       "Accept" -> "application/json",
       "Content-Type" -> "application/json",
@@ -100,7 +100,7 @@ class HttpRequestTest extends HttpClientTest {
       BarEntity("bar")
     )
 
-    request.Method should equal(Put)
+    request.method should equal(Put)
     request.Headers should equal(Map(
       "Accept" -> "application/xml",
       "Content-Type" -> "application/xml",
