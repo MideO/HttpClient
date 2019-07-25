@@ -25,7 +25,8 @@ val request = HttpRequest(Post,"http://localhost:8080/lalal",Map("aHeader" -> "v
 val future: Future[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
 
 # Get you response => Response("response")
-future.get.right.get.Entity
+val eitherResponse: Either[Throwable, HttpResponse[Response]] = Await.result(future, 5 seconds)
+eitherResponse.right.get.Entity
 
 
 # Create Xml Request

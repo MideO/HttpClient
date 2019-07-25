@@ -16,6 +16,7 @@ lazy val httpio = (project in file("."))
       "-Yrangepos"
     ),
     libraryDependencies ++= Seq(
+      "org.apache.kafka" % "kafka-streams" % "0.10.2.1",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.9",
       "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % "2.9.9",
       "io.netty" % "netty-codec-http2" % "4.1.37.Final",
