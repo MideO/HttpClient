@@ -44,7 +44,7 @@ class HttpRequestSenderFunctionalTest extends HttpClientTest {
       Post,
       "http://localhost:8080",
       Map("Accept" -> "application/json"),
-      Payload("abc"))
+      Payload("abc"),retryOptions = RetryOptions(2))
 
     val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
     optionResponse.get.right.get.StatusCode should equal(404)
@@ -67,7 +67,7 @@ class HttpRequestSenderFunctionalTest extends HttpClientTest {
       Put,
       "http://localhost:8080/foo",
       Map("Accept" -> "application/json"),
-      Payload("abc"))
+      Payload("abc"),retryOptions = RetryOptions(2))
 
     val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
     optionResponse.get.right.get.StatusCode should equal(200)
