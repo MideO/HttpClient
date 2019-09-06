@@ -20,7 +20,7 @@ class HttpRequestSenderFunctionalTest extends HttpClientTest {
   override def afterAll(): Unit = mockServer.stop()
 
 
-  it should "send request post Future" in {
+  it should "send Future request post " in {
     implicit def unit[T]: T => Future[T] = t => Future(t)
 
     val request = HttpRequest(
@@ -39,7 +39,7 @@ class HttpRequestSenderFunctionalTest extends HttpClientTest {
   }
 
 
-  it should "send post request successfully" in {
+  it should "send Option post request successfully" in {
     val request = JsonHttpRequest(
       Post,
       "http://localhost:8080",

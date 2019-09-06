@@ -16,7 +16,7 @@
     <logger name="io.netty" level="ERROR">
         <appender-ref ref="ASYNC"/>
     </logger>
-    <logger name="org.eclipse.jetty" level="ERROR">
+    <logger name="org.eclipse.jetty" level="INFO">
         <appender-ref ref="ASYNC"/>
     </logger>
 
