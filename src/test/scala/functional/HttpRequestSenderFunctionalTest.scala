@@ -104,7 +104,7 @@ class HttpRequestSenderFunctionalTest extends HttpClientTest {
       stubFor {
         get(urlEqualTo("/slow-endpoint"))
           .willReturn(aResponse()
-            .withFixedDelay(1000)
+            .withFixedDelay(4000)
             .withHeader("Content-Type", "application/xml")
             .withBody("<xml><value>response</value></xml>"))
       }

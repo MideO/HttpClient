@@ -1,15 +1,11 @@
 package com.github.mideo.httpClient
 
-import java.net.{HttpURLConnection, URL}
+import java.net.URL
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.mideo.httpClient.Implicits._
 
-import scala.collection.JavaConverters._
-import scala.io.Source
 import scala.language.higherKinds
 import scala.reflect._
-import scala.util.Try
 
 case class TimeOutOption(ConnectTimeoutMillis: Int = 1000, ReadTimeoutMillis: Int = 5000)
 

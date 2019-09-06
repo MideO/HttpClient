@@ -19,7 +19,8 @@ lazy val httpio = (project in file("."))
       "org.apache.kafka" % "kafka-streams" % "0.10.2.1",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.9",
       "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % "2.9.9",
-      "io.netty" % "netty-codec-http2" % "4.1.37.Final",
+      "ch.qos.logback" % "logback-classic" % "1.2.3",
+      "io.netty" % "netty-codec-http" % "4.1.39.Final",
       "org.scalatest" %% "scalatest" % "3.0.5" % Test,
       "org.mockito" % "mockito-all" % "1.10.19" % Test,
       "com.github.tomakehurst" % "wiremock" % "2.23.2" % Test
