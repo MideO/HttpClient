@@ -118,7 +118,6 @@ private class HttpChannelHandler extends SimpleChannelInboundHandler[HttpObject]
   var responseHeaders: Map[String, String] = _
   var body = ""
 
-
   override def channelRead0(ctx: ChannelHandlerContext, msg: HttpObject): Unit = {
     msg match {
       case response: NettyHttpResponse =>
