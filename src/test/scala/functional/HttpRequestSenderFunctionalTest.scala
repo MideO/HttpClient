@@ -47,8 +47,8 @@ class HttpRequestSenderFunctionalTest extends HttpClientTest {
       Payload("abc"))
 
     val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
-    optionResponse.get.isRight should be(true)
     optionResponse.get.right.get.StatusCode should equal(404)
+    optionResponse.get.isRight should be(true)
     optionResponse.get.right.get.Entity should equal("No response could be served as there are no stub mappings in this WireMock instance.")
 
   }
@@ -70,8 +70,8 @@ class HttpRequestSenderFunctionalTest extends HttpClientTest {
       Payload("abc"))
 
     val optionResponse: Option[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
-    optionResponse.get.isRight should be(true)
     optionResponse.get.right.get.StatusCode should equal(200)
+    optionResponse.get.isRight should be(true)
     optionResponse.get.right.get.Entity should equal(Response("response"))
 
   }
