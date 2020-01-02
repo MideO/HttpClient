@@ -14,7 +14,7 @@ case class HttpResponse[T: ClassTag](StatusCode: Int,
     Mapper.readValue[T](raw.toArray, classTag[T].runtimeClass.asInstanceOf[Class[T]])
   }.toOption.getOrElse {
     // Last resort! dump as String
-    Source.fromBytes(raw.toArray).mkString.asInstanceOf[T]
+    Source.fromBytes(raw.toArray).mkString.trim.asInstanceOf[T]
   }
 
 }

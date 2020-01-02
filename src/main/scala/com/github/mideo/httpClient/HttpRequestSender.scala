@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.mideo.httpClient.Implicits._
 import io.netty.bootstrap.Bootstrap
-import io.netty.buffer.Unpooled
+import io.netty.buffer.{ByteBuf, Unpooled}
 import io.netty.channel._
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
@@ -79,10 +79,6 @@ object HttpRequestSender {
         }
       }).connect(uri.getHost, port).sync().channel()
 
-
-
-
-    // Prepare the HTTP request.
     val nettyRequest = if (request.Entity.isDefined) {
       new DefaultFullHttpRequest(HttpVersion.HTTP_1_1,
         new NettyHttpMethod(request.Method.toUpperCase),
@@ -106,7 +102,7 @@ object HttpRequestSender {
     // Wait for the server to close the connection.
     eventLoopGroup.shutdownGracefully()
 
-    val response = HttpResponse[K](handler.status.code(), handler.responseHeaders, handler.body.getBytes())
+    val response = HttpResponse[K](handler.status.code(), handler.responseHeaders, handler.body.array())
     log.info(s"got response $response")
     response
   }
@@ -116,7 +112,7 @@ private class HttpChannelHandler extends SimpleChannelInboundHandler[HttpObject]
   private val log: Logger = LoggerFactory.getLogger(this.getClass.getCanonicalName)
   var status: HttpResponseStatus = _
   var responseHeaders: Map[String, String] = _
-  var body = ""
+  val body: ByteBuf = Unpooled.buffer()
 
   override def channelRead0(ctx: ChannelHandlerContext, msg: HttpObject): Unit = {
     msg match {
@@ -126,7 +122,7 @@ private class HttpChannelHandler extends SimpleChannelInboundHandler[HttpObject]
           it => it.getKey -> it.getValue
         }.toMap
       case content: HttpContent =>
-        body += content.content().toString(CharsetUtil.UTF_8)
+        body.writeBytes(content.content())
         if (content.isInstanceOf[LastHttpContent]) {
           ctx.close
         }
