@@ -20,7 +20,12 @@ implicit def unit[T]: T => Future[T] = t => Future(t)
 
 # Create your request
 
-val request = HttpRequest(Post,"http://localhost:8080/lalal",Map("aHeader" -> "value"),Payload("abc"))
+val request = HttpRequest(
+        Post,
+        "http://localhost:8080/lalal",
+        Map("aHeader" -> "value"),
+        Payload("abc")
+    )
 
 val future: Future[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
 
@@ -31,7 +36,12 @@ eitherResponse.right.get.Entity
 
 # Create Xml Request
 
-val request = XmlHttpRequest(Post,"http://localhost:8080/lalal",Map("aHeader" -> "value"),Payload("abc"))
+val request = XmlHttpRequest(
+        Post,
+        "http://localhost:8080/lalal",
+        Map("aHeader" -> "value"),
+        Payload("abc")
+    )
 
 val future: Future[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
 
@@ -42,11 +52,17 @@ eitherResponse.right.get.Entity
 
 # Create Json Request
 
-val request = JsonHttpRequest(Post,"http://localhost:8080/lalal",Map("aHeader" -> "value"),Payload("abc"))
+val request = JsonHttpRequest(
+        Post,
+        "http://localhost:8080/lalal",
+        Map("aHeader" -> "value"),
+        Payload("abc")
+     )
 
 # Use a different Monad
 
 implicit def unit[T]: T => Option[T] = t => Some(t)
+
 val option: Future[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
 
 # Get you response => Response("response")
