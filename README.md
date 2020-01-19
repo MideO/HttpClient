@@ -3,6 +3,9 @@ Effectful Light-Weight Scala HttpClient
 
 [![Build Status](https://travis-ci.org/MideO/HttpClient.svg?branch=master)](https://travis-ci.org/MideO/HttpClient)
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.mideo/httpclient_2.12/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.mideo%22%20a%3A%22httpclient_2.12%22)
+
+
 
 # Usage
 Generate a effectful response from a given http request
