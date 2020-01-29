@@ -32,7 +32,7 @@ val request = HttpRequest(
 
 val future: Future[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
 
-# Get you response => Response("response")
+# Get you response
 val eitherResponse: Either[Throwable, HttpResponse[Response]] = Await.result(future, 5 seconds)
 eitherResponse.right.get.Entity
 
@@ -48,7 +48,7 @@ val request = XmlHttpRequest(
 
 val future: Future[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
 
-# Get you response => Response("response")
+# Get you response
 val eitherResponse: Either[Throwable, HttpResponse[Response]] = result(future, 5 seconds)
 eitherResponse.right.get.Entity
 
@@ -68,7 +68,7 @@ implicit def unit[T]: T => Option[T] = t => Some(t)
 
 val option: Future[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
 
-# Get you response => Response("response")
+# Get you response 
 
 option.get.right.get.Entity
  
