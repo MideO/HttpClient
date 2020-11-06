@@ -66,7 +66,7 @@ val request = JsonHttpRequest(
 
 implicit def unit[T]: T => Option[T] = t => Some(t)
 
-val option: Future[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
+val option: Option[Either[Throwable, HttpResponse[Response]]] = HttpRequestSender.send(request)
 
 # Get you response 
 
